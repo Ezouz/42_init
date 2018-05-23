@@ -1,0 +1,9 @@
+#!/bin/bash
+
+sudo touch /var/log/update_script.log
+sudo chmod 646 /var/log/update_script.log
+crontab -l > /home/vagrant/tmp.txt
+echo "0 4 * * 1 sudo apt-get update >> /var/log/update_script.log && sudo apt-get -y \
+upgrade >> /var/log/update_script.log 2>&1" > /home/vagrant/tmp.txt
+crontab /home/vagrant/tmp.txt
+rm /home/vagrant/tmp.txt

@@ -1,0 +1,10 @@
+do
+host intra.42.fr
+(in order to get the IP address of the intra.42.fr website > 10.52.1.76 par exemple)
+then
+host 46.19.122.85
+(to get the domain name pointer (reverse DNS) > prod1-hadopi-web.integra.fr) 
+then
+vim /etc/hosts
+write
+10.52.1.76		prod1-hadopi-web.integra.fr

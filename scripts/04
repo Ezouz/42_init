@@ -1,0 +1,24 @@
+#!/bin/bash
+# Edit root email in /etc/aliases. Add line:
+# root: email@domain.com
+
+RULE="0 0 * * * /home/vagrant/scripts/04"
+SC="/home/vagrant/scripts/04"
+CT="/etc/crontab"
+TMP="/home/vagrant/tmp.txt"
+WCT="/home/vagrant/scripts/watching_crontab.txt"
+CHECK=`crontab -l 2> /dev/null | sudo grep "0 0 \* \* \* $SC"`
+if [ "$CHECK" != "$RULE" ]; then
+		sudo service cron start
+        crontab -l 2> /dev/null > $TMP
+        echo "$RULE" >> $TMP
+        crontab $TMP
+        rm $TMP
+        sudo md5sum $CT | tr -d "$CT" > $WCT
+fi
+PRINT1=`sed -n 'p' $WCT`
+PRINT2=`sudo md5sum $CT | tr -d "$CT"`
+if [ "$PRINT1" != "$PRINT2" ]; then
+        cat $CT | mail -s "ALERT: "$CT" has been modified" root
+        sudo md5sum $CT | tr -d "$CT" > $WCT
+fi
